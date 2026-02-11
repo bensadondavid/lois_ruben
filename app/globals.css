@@ -7,7 +7,7 @@
 
 @theme inline {
   --color-text-entry : var(--text-entry);
-  --color-text: var(--text-card);
+  --color-text-card: var(--text-card);
   --font-lora: var(--font-lora);
   --font-pinyon: var(--font-pinyon);
   --font-afrah: var(--font-afrah);

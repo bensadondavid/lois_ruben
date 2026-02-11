@@ -36,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${lora.variable} ${pinyon.variable} ${afrah.variable} ${symphony.variable}`} >
+    <html lang="fr" className={`${lora.variable} ${pinyon.variable} ${afrah.variable} ${symphony.variable} antialiased`} >
       <body className="h-screen w-screen">
         <main>
           {children}
