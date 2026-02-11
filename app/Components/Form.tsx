@@ -46,10 +46,12 @@ const Form = () => {
             if(!response.ok){
                 const data = await response.json()
                 console.log(data)
+                alert('Merci de réessayer')
                 return
             }
             const data = await response.json()
             console.log(data)
+            alert('Merci pour votre réponse !')
             setFormdata({
                 lastname : '',
                 firstname : '',
@@ -69,12 +71,12 @@ const Form = () => {
   return (
 
     <form 
-        className="flex flex-col gap-2 justify-center bg-white h-full w-[50%]"
+        className="flex flex-col gap-3 justify-center h-full w-full font-lora"
         onSubmit={handleSubmit}
         >
-        <label>Nom*
+        <label className="flex flex-col w-fit gap-2 ml-5">Nom* : <br />
             <input
-                className="p-4 border border-black" 
+                className="bg-white rounded-full px-8 py-2 border border-[#EFCBD5]" 
                 type="text"
                 name="lastname"
                 value={formData.lastname}
@@ -82,9 +84,9 @@ const Form = () => {
                 required
             /> 
         </label>
-        <label>Prénom*
+        <label className="flex flex-col w-fit gap-2 ml-5">Prénom* :<br />
             <input 
-                className="p-4 border border-black" 
+                className="bg-white rounded-full px-8 py-2 border border-[#EFCBD5]" 
                 type="text"
                 name="firstname"
                 value={formData.firstname}
@@ -92,8 +94,9 @@ const Form = () => {
                 required
             />
         </label> 
-        <label>
+        <label className="flex items-center gap-2 mt-3 ml-5">
             <input 
+                className="appearance-none w-3 h-3 bg-white rounded-full border border-[#EFCBD5] checked:bg-[#EFCBD5]"
                 type="radio" 
                 name="presence"
                 value={'assisteront'}
@@ -104,8 +107,9 @@ const Form = () => {
         Assisteront</label>
        {
        formData.presence === 'assisteront' ?
-        <label>Nombre
+        <label className="flex flex-col w-fit gap-2 ml-5">Nombre* :<br />
             <input 
+            className="bg-white rounded-full px-8 py-2 border border-[#EFCBD5]" 
             type="number" 
             name="number" 
             value={formData.number} 
@@ -116,8 +120,9 @@ const Form = () => {
         :
         null
         }
-        <label>
+        <label className="flex items-center gap-2 mb-4 ml-5">
             <input 
+                className="appearance-none w-3 h-3 bg-white rounded-full border border-[#EFCBD5] checked:bg-[#EFCBD5]"
                 type="radio" 
                 name="presence"
                 value={"n'assisteront pas"}
@@ -125,19 +130,20 @@ const Form = () => {
                 onChange={handleChange}
             />
         N'assisteront pas</label>
-        <label>Un message pour les mariés
-            <textarea name="message" value={formData.message} onChange={handleChange}></textarea>
+        <label className="flex flex-col items-center w-fit gap-2 ml-5">Un message pour les mariés :<br />
+            <textarea className="bg-white rounded-3xl px-9 py-2 border border-[#EFCBD5]"  name="message" value={formData.message} onChange={handleChange}></textarea>
         </label>
        <button 
+        className="bg-white w-[130px] mx-auto py-1 rounded-full border border-[#EFCBD5] mt-5 flex items-center justify-center"
         type="submit"
         disabled={loading}
         >
         {loading ? 
             <Tailspin
-                size="40"
+                size="20"
                 stroke="5"
                 speed="0.9"
-                color="black" 
+                color="#EFCBD5" 
             />
             : 'Envoyer'
         }
