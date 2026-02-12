@@ -2,64 +2,29 @@
 
 import { useEffect, useRef, useState } from "react";
 
+const SRC = "/Musique/tamid.mp3";
+
+// ✅ Singleton audio (évite les doubles mounts → plus d’écho)
+let sharedAudio: HTMLAudioElement | null = null;
+let sharedHasTriedAutoStart = false;
+
+function getSharedAudio() {
+  if (!sharedAudio) {
+    sharedAudio = new Audio(SRC);
+    sharedAudio.loop = true;
+    sharedAudio.preload = "auto";
+    // iOS: parfois utile de forcer un volume de base
+    sharedAudio.volume = 1;
+  }
+  return sharedAudio;
+}
+
 export default function Musique() {
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const startedRef = useRef(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isMuted, setIsMuted] = useState(false);
+  const [isReady, setIsReady] = useState(false); // pour savoir si l’audio est OK
 
-  const srcMusique = "/Musique/tamid.mp3";
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    // Nettoyage fort pour éviter écho au premier load
-    audio.pause();
-    audio.currentTime = 0;
-    audio.muted = isMuted;
-    audio.volume = isMuted ? 0 : 1;
-
-    const startOnce = async () => {
-      if (startedRef.current) return;
-      startedRef.current = true;
-
-      try {
-        await audio.play();
-      } catch {}
-    };
-
-    // Démarre au premier geste (stable + mobile safe)
-    document.addEventListener("click", startOnce, { passive: true });
-    document.addEventListener("touchstart", startOnce, { passive: true });
-
-    return () => {
-      document.removeEventListener("click", startOnce);
-      document.removeEventListener("touchstart", startOnce);
-      audio.pause();
-      audio.currentTime = 0;
-      startedRef.current = false;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleMute = async () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    // Si jamais la musique n’a pas encore démarré
-    if (!startedRef.current) {
-      startedRef.current = true;
-      try { await audio.play(); } catch {}
-    }
-
-    const nextMuted = !isMuted;
-
-    audio.muted = nextMuted;
-    audio.volume = nextMuted ? 0 : 1;
-
-    setIsMuted(nextMuted);
-  };
-
+  // Tes SVG (inchangés)
   const PlayIcon = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DD5460" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <polygon points="3,9 9,9 15,3 15,21 9,15 3,15" />
@@ -76,20 +41,91 @@ export default function Musique() {
     </svg>
   );
 
+  useEffect(() => {
+    const audio = getSharedAudio();
+    audioRef.current = audio;
+
+    const applyMute = (muted: boolean) => {
+      // iOS: muted parfois capricieux → on met aussi volume
+      audio.muted = muted;
+      audio.volume = muted ? 0 : 1;
+    };
+
+    applyMute(isMuted);
+
+    const tryStart = async () => {
+      try {
+        await audio.play();
+        setIsReady(true);
+        cleanupGesture();
+      } catch {
+        // autoplay bloqué → on attend un geste
+      }
+    };
+
+    const onGesture = () => {
+      // au 1er geste, on tente de lancer
+      tryStart();
+    };
+
+    const addGesture = () => {
+      document.addEventListener("click", onGesture, { passive: true });
+      document.addEventListener("touchstart", onGesture, { passive: true });
+      document.addEventListener("keydown", onGesture);
+    };
+
+    const cleanupGesture = () => {
+      document.removeEventListener("click", onGesture);
+      document.removeEventListener("touchstart", onGesture);
+      document.removeEventListener("keydown", onGesture);
+    };
+
+    // ✅ Important : on n’essaye l’autoplay “agressif” qu’une seule fois (sinon double-start possible)
+    if (!sharedHasTriedAutoStart) {
+      sharedHasTriedAutoStart = true;
+      tryStart();
+      addGesture();
+    } else {
+      // Si déjà essayé, on s’assure juste que l’état mute est appliqué
+      setIsReady(!audio.paused);
+    }
+
+    return () => {
+      // On NE pause PAS le singleton ici, sinon tu risques de relancer au remount (et refaire l’écho)
+      cleanupGesture();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleMute = async () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const nextMuted = !isMuted;
+
+    // Si l’audio n’a jamais pu démarrer (autoplay bloqué), on tente au clic
+    if (audio.paused) {
+      try { await audio.play(); setIsReady(true); } catch {}
+    }
+
+    audio.muted = nextMuted;
+    audio.volume = nextMuted ? 0 : 1;
+    setIsMuted(nextMuted);
+  };
+
   return (
     <div className="musique">
-      <audio
-        ref={audioRef}
-        src={srcMusique}
-        loop
-        playsInline
-        preload="auto"
-        className="absolute w-0 h-0 opacity-0 pointer-events-none"
-      />
-
-      <button type="button" onClick={handleMute}>
-        {isMuted ? <PauseIcon /> : <PlayIcon />}
+      <button type="button" onClick={handleMute} aria-label={isMuted ? "Unmute" : "Mute"}>
+        {/* logique d’icône: si muted → PlayIcon, sinon PauseIcon (comme tu avais) */}
+        {isMuted ? <PlayIcon /> : <PauseIcon />}
       </button>
+
+      {/* Optionnel: si tu veux indiquer “tapez pour activer le son” quand autoplay bloqué */}
+      {!isReady && (
+        <p className="text-xs font-lora opacity-70 mt-1">
+          Touchez l’écran pour activer la musique
+        </p>
+      )}
     </div>
   );
 }
