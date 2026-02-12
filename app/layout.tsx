@@ -34,7 +34,7 @@ export const metadata = {
   title: "Loïs & Ruben 💍",
   description: "Invitation au mariage de Lois et Ruben",
   icons: {
-  icon: "/Logo/logo-lois-entry.webp",
+  icon: "/Logo/logo-lois-fav.png",
 }
 };
 
