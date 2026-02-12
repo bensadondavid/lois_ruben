@@ -49,6 +49,7 @@ function Card() {
           <p className="text-center font-pinyon text-[10px]">Réponse souhaitée dès réception </p>
           <Form />
       </div>
+      <a className="font-lora text-center absolute bottom-4 italic text-[#DD5460]" href="https://azmana.fr">Réalisé avec amour par <span className="underline">Azmana</span></a>
     </div>
 
   )
