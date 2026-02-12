@@ -22,7 +22,6 @@ function getSharedAudio() {
 export default function Musique() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isMuted, setIsMuted] = useState(false);
-  const [isReady, setIsReady] = useState(false); // pour savoir si l’audio est OK
 
   // Tes SVG (inchangés)
   const PlayIcon = () => (
@@ -119,13 +118,6 @@ export default function Musique() {
         {/* logique d’icône: si muted → PlayIcon, sinon PauseIcon (comme tu avais) */}
         {isMuted ? <PauseIcon /> : <PlayIcon />}
       </button>
-
-      {/* Optionnel: si tu veux indiquer “tapez pour activer le son” quand autoplay bloqué */}
-      {!isReady && (
-        <p className="text-xs font-lora opacity-70 mt-1">
-          Touchez l’écran pour activer la musique
-        </p>
-      )}
     </div>
   );
 }

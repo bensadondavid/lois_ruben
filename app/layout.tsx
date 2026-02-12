@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Lora, Pinyon_Script,  } from 'next/font/google'
 import localFont from "next/font/local";
+import Musique from "./Components/Musique";
 
 
 export const lora = Lora({
@@ -47,6 +48,7 @@ export default function RootLayout({
     <html lang="fr" className={`${lora.variable} ${pinyon.variable} ${afrah.variable} ${symphony.variable} antialiased`} >
       <body className="h-dvh w-screen">
         <main>
+          <Musique /> {/* Musique */}
           {children}
         </main>
       </body>

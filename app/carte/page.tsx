@@ -1,7 +1,6 @@
 'use client'
 import Waze from "../Components/Waze"
 import Form from "../Components/Form"
-import Musique from "../Components/Musique"
 import Image from "next/image"
 import { motion } from "motion/react"
 
@@ -9,7 +8,6 @@ function Card() {
 
   return (
     <div className="relative flex flex-col items-center gap-3 min-h-dvh overflow-x-hidden"> {/* Container globale */}
-      <Musique /> {/* Musique */}
       <p className="absolute top-3 right-3 font-lora">בס״ד</p>
       <div id="background-main" className="fixed inset-0 bg-[url('/Backgrounds/lois-bg-main.webp')] bg-cover bg-center -z-10"></div> {/* Background */}
 
