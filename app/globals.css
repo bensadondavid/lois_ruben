@@ -18,13 +18,12 @@
 .musique button{
     height: 40px;
     width: 40px;
-    border: solid  #DD5460 2px;
+    border : 2px white solid;
     border-radius: 50%;
     position: fixed;
     bottom: 30px;
     left: 10px;
     z-index: 100;
-    background-color: #F2F1F1;
     padding: 5px;
 }
 
@@ -32,5 +31,4 @@
     padding: 0;
     margin: 0;
     overflow: visible;
-    background-color: #F2F1F1;
 }

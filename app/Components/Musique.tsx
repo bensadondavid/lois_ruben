@@ -25,7 +25,7 @@ export default function Musique() {
 
   // Tes SVG (inchangés)
   const PlayIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DD5460" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <polygon points="3,9 9,9 15,3 15,21 9,15 3,15" />
       <path d="M19 8a5 5 0 0 1 0 8" />
       <path d="M21 5a9 9 0 0 1 0 14" />
@@ -33,7 +33,7 @@ export default function Musique() {
   );
 
   const PauseIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DD5460" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <polygon points="3,9 9,9 15,3 15,21 9,15 3,15" />
       <line x1="19" y1="9" x2="23" y2="15" />
       <line x1="23" y1="9" x2="19" y2="15" />
@@ -55,7 +55,6 @@ export default function Musique() {
     const tryStart = async () => {
       try {
         await audio.play();
-        setIsReady(true);
         cleanupGesture();
       } catch {
         // autoplay bloqué → on attend un geste
@@ -86,7 +85,6 @@ export default function Musique() {
       addGesture();
     } else {
       // Si déjà essayé, on s’assure juste que l’état mute est appliqué
-      setIsReady(!audio.paused);
     }
 
     return () => {
@@ -104,7 +102,7 @@ export default function Musique() {
 
     // Si l’audio n’a jamais pu démarrer (autoplay bloqué), on tente au clic
     if (audio.paused) {
-      try { await audio.play(); setIsReady(true); } catch {}
+      try { await audio.play() } catch {}
     }
 
     audio.muted = nextMuted;
