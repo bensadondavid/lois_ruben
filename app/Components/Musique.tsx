@@ -4,9 +4,8 @@ import { useEffect, useRef, useState } from "react";
 
 export default function Musique() {
   const audioRef = useRef<HTMLAudioElement>(null);
-
-  // UI: true = son coupé (icône mute), false = son actif
-  const [isMuted, setIsMuted] = useState(true);
+  const startedRef = useRef(false);
+  const [isMuted, setIsMuted] = useState(false);
 
   const srcMusique = "/Musique/tamid.mp3";
 
@@ -14,63 +13,54 @@ export default function Musique() {
     const audio = audioRef.current;
     if (!audio) return;
 
-    // On démarre en mode "autoplay autorisé" (muted)
-    audio.muted = true;
-    audio.volume = 0;
+    // Nettoyage fort pour éviter écho au premier load
+    audio.pause();
+    audio.currentTime = 0;
+    audio.muted = isMuted;
+    audio.volume = isMuted ? 0 : 1;
 
-    const unlockAndPlay = async () => {
-      const a = audioRef.current;
-      if (!a) return;
+    const startOnce = async () => {
+      if (startedRef.current) return;
+      startedRef.current = true;
 
       try {
-        // On passe en son actif
-        a.muted = false;
-        a.volume = 1;
-
-        await a.play();
-
-        setIsMuted(false);
-
-        document.removeEventListener("click", unlockAndPlay);
-        document.removeEventListener("touchstart", unlockAndPlay);
-        document.removeEventListener("keydown", unlockAndPlay);
-      } catch {
-        // si encore bloqué, on retentera au prochain geste
-      }
+        await audio.play();
+      } catch {}
     };
 
-    // Tentative immédiate (souvent bloquée en mobile)
-    audio.play().catch(() => {});
-
-    // On écoute uniquement des gestes "valables"
-    document.addEventListener("click", unlockAndPlay, { passive: true });
-    document.addEventListener("touchstart", unlockAndPlay, { passive: true });
-    document.addEventListener("keydown", unlockAndPlay);
+    // Démarre au premier geste (stable + mobile safe)
+    document.addEventListener("click", startOnce, { passive: true });
+    document.addEventListener("touchstart", startOnce, { passive: true });
 
     return () => {
-      document.removeEventListener("click", unlockAndPlay);
-      document.removeEventListener("touchstart", unlockAndPlay);
-      document.removeEventListener("keydown", unlockAndPlay);
+      document.removeEventListener("click", startOnce);
+      document.removeEventListener("touchstart", startOnce);
+      audio.pause();
+      audio.currentTime = 0;
+      startedRef.current = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleMute = async () => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    // On s'assure que c'est bien "débloqué" par un geste user
-    try { await audio.play(); } catch {}
+    // Si jamais la musique n’a pas encore démarré
+    if (!startedRef.current) {
+      startedRef.current = true;
+      try { await audio.play(); } catch {}
+    }
 
     const nextMuted = !isMuted;
 
-    // Ici on fait les deux (muted + volume) pour être robuste
     audio.muted = nextMuted;
     audio.volume = nextMuted ? 0 : 1;
 
     setIsMuted(nextMuted);
   };
 
-  const SoundOnIcon = () => (
+  const PlayIcon = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DD5460" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <polygon points="3,9 9,9 15,3 15,21 9,15 3,15" />
       <path d="M19 8a5 5 0 0 1 0 8" />
@@ -78,7 +68,7 @@ export default function Musique() {
     </svg>
   );
 
-  const MutedIcon = () => (
+  const PauseIcon = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DD5460" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <polygon points="3,9 9,9 15,3 15,21 9,15 3,15" />
       <line x1="19" y1="9" x2="23" y2="15" />
@@ -91,17 +81,14 @@ export default function Musique() {
       <audio
         ref={audioRef}
         src={srcMusique}
-        autoPlay
         loop
         playsInline
         preload="auto"
-        // IMPORTANT: on ne met PAS muted={true} en dur !
-        muted={isMuted}
         className="absolute w-0 h-0 opacity-0 pointer-events-none"
       />
 
       <button type="button" onClick={handleMute}>
-        {isMuted ? <MutedIcon /> : <SoundOnIcon />}
+        {isMuted ? <PauseIcon /> : <PlayIcon />}
       </button>
     </div>
   );
