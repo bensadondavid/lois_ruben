@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const SRC = "/Musique/tamid.mp3";
+const SRC = "/musique/tamid.mp3";
 
 // ✅ Singleton audio (évite les doubles mounts → plus d’écho)
 let sharedAudio: HTMLAudioElement | null = null;
