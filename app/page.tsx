@@ -5,7 +5,7 @@ function Home() {
 
   return (
 
-    <div className='w-screen h-screen flex flex-col items-center justify-between bg-[url("/Backgrounds/lois-bg-accueil.webp")] bg-cover bg-center' >
+    <div className='w-screen h-dvh flex flex-col items-center justify-between bg-[url("/Backgrounds/lois-bg-accueil.webp")] bg-cover bg-center' >
       <div className='flex flex-col justify-center items-center gap-2 mt-6'>
         <Image
           src="/Logo/logo-lois-entry.webp"

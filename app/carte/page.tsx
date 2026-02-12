@@ -6,7 +6,7 @@ import Image from "next/image"
 function Card() {
 
   return (
-    <div className="relative flex flex-col items-center gap-3 min-h-screen overflow-x-hidden"> {/* Container globale */}
+    <div className="relative flex flex-col items-center gap-3 min-h-dvh overflow-x-hidden"> {/* Container globale */}
       <Musique /> {/* Musique */}
       <p className="absolute top-3 right-3 font-lora">בס״ד</p>
       <div id="background-main" className="fixed inset-0 bg-[url('/Backgrounds/lois-bg-main.webp')] bg-cover bg-center -z-10"></div> {/* Background */}
@@ -44,7 +44,7 @@ function Card() {
         <Waze />
       </div>
 
-      <div id="houppa-reponse" className="h-screen w-[85%] mt-5 mb-15 bg-[#F3F1F1] border-3 border-[#DD5460] flex flex-col items-center">{/* Reponse */}
+      <div id="houppa-reponse" className="h-dvh w-[85%] mt-5 mb-15 bg-[#F3F1F1] border-3 border-[#DD5460] flex flex-col items-center">{/* Reponse */}
           <h1 className="text-center text-[#F1C6D7] font-symphony text-5xl mt-15">Réponse</h1>
           <p className="text-center font-pinyon text-[10px]">Réponse souhaitée dès réception </p>
           <Form />

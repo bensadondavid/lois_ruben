@@ -37,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className={`${lora.variable} ${pinyon.variable} ${afrah.variable} ${symphony.variable} antialiased`} >
-      <body className="h-screen w-screen">
+      <body className="h-dvh w-screen">
         <main>
           {children}
         </main>

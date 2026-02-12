@@ -4,7 +4,7 @@ function Loading() {
 
   return (
 
-    <div className="h-screen w-screen bg-white flex items-center justify-center">
+    <div className="h-dvh w-screen bg-white flex items-center justify-center">
         <Image
             src='/Logo/logo-lois-entry.webp' 
             alt="Logo_Lois&Ruben"
