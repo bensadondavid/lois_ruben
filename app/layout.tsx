@@ -30,6 +30,14 @@ export const symphony = localFont({
   display: "swap",
 });
 
+export const metadata = {
+  title: "Loïs & Ruben 💍",
+  description: "Invitation au mariage de Lois et Ruben",
+  icons: {
+  icon: "/Logo/logo-lois-entry.webp",
+}
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{

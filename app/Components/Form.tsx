@@ -2,6 +2,7 @@
 import { useState } from "react"
 import { Tailspin } from 'ldrs/react'
 import 'ldrs/react/Tailspin.css'
+import { motion } from "motion/react"
 
 interface FormData{
     lastname : string,
@@ -71,10 +72,10 @@ const Form = () => {
   return (
 
     <form 
-        className="flex flex-col gap-3 justify-center h-full w-full font-lora"
+        className="flex flex-col gap-3 justify-center h-full w-full font-lora md:w-[30%] md:flex md:flex-col"
         onSubmit={handleSubmit}
         >
-        <label className="flex flex-col w-fit gap-2 ml-5">Nom* : <br />
+        <motion.label initial={{ opacity: 0, x: -100 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} className="flex flex-col w-fit gap-2 ml-5">Nom* : <br />
             <input
                 className="bg-white rounded-full px-8 py-2 border border-[#EFCBD5]" 
                 type="text"
@@ -83,8 +84,8 @@ const Form = () => {
                 onChange={handleChange}
                 required
             /> 
-        </label>
-        <label className="flex flex-col w-fit gap-2 ml-5">Prénom* :<br />
+        </motion.label>
+        <motion.label initial={{ opacity: 0, x: 100 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} className="flex flex-col w-fit gap-2 ml-5">Prénom* :<br />
             <input 
                 className="bg-white rounded-full px-8 py-2 border border-[#EFCBD5]" 
                 type="text"
@@ -93,7 +94,7 @@ const Form = () => {
                 onChange={handleChange}
                 required
             />
-        </label> 
+        </motion.label> 
         <label className="flex items-center gap-2 mt-3 ml-5">
             <input 
                 className="appearance-none w-3 h-3 bg-white rounded-full border border-[#EFCBD5] checked:bg-[#EFCBD5]"
@@ -133,7 +134,8 @@ const Form = () => {
         <label className="flex flex-col items-center w-fit gap-2 ml-5">Un message pour les mariés :<br />
             <textarea className="bg-white rounded-3xl px-9 py-2 border border-[#EFCBD5]"  name="message" value={formData.message} onChange={handleChange}></textarea>
         </label>
-       <button 
+       <motion.button 
+        initial={{ scale: 0 }} whileInView={{ scale: 1 }} transition={{ duration: 0.8, ease: "easeOut" }}
         className="bg-white w-[130px] mx-auto py-1 rounded-full border border-[#EFCBD5] mt-5 flex items-center justify-center"
         type="submit"
         disabled={loading}
@@ -147,7 +149,7 @@ const Form = () => {
             />
             : 'Envoyer'
         }
-        </button>
+        </motion.button>
     </form>
 
   )
