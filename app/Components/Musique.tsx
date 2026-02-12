@@ -117,7 +117,7 @@ export default function Musique() {
     <div className="musique">
       <button type="button" onClick={handleMute} aria-label={isMuted ? "Unmute" : "Mute"}>
         {/* logique d’icône: si muted → PlayIcon, sinon PauseIcon (comme tu avais) */}
-        {isMuted ? <PlayIcon /> : <PauseIcon />}
+        {isMuted ? <PauseIcon /> : <PlayIcon />}
       </button>
 
       {/* Optionnel: si tu veux indiquer “tapez pour activer le son” quand autoplay bloqué */}
