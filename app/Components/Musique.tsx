@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 
 function Musique(){
 
-  const audioRef = useRef(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isMuted, setIsMuted] = useState(false);
   const srcMusique = '/Musique/tamid.mp3'
 
